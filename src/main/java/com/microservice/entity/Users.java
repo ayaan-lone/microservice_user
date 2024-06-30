@@ -24,6 +24,12 @@ public class Users implements Serializable {
 	@Column
 	private Long id;
 
+	@Column
+	private boolean isOtpVerified = false;
+
+	@Column
+	private boolean isLoggedIn = false;
+
 	@Column(nullable = false, unique = true)
 	private String email;
 
@@ -161,10 +167,5 @@ public class Users implements Serializable {
 		this.isLoggedIn = isLoggedIn;
 	}
 
-	@Column
-	private boolean isOtpVerified = false;
-
-	@Column
-	private boolean isLoggedIn = false;
-
+	
 }

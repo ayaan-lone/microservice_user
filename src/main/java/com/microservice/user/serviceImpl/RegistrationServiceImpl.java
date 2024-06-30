@@ -33,9 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 		if (optionalUser.isPresent()) {
 			throw new UserApplicationException(HttpStatus.BAD_REQUEST, "User already present");
 		}
-//		System.out.println("dto is:"+ userRegistrationRequestDto.getEmail());
 		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
-//		System.out.println("After mapping, user is: "+ user.getEmail());
 		registerUserRepository.save(user);
 		return user;
 	}
