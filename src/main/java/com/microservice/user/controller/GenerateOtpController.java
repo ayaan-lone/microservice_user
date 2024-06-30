@@ -25,7 +25,7 @@ public class GenerateOtpController {
 		this.generateOtpService = generateOtpService;
 	}
 
-	@GetMapping("/generate-otp")
+	@GetMapping("/reset-password")
 	public ResponseEntity<String> resetPassword(@Valid @RequestParam String email)
 			throws UserApplicationException {
 
