@@ -6,7 +6,5 @@ import com.microservice.user.request.VerifyOtpDto;
 
 public interface ResetPasswordService {
 	String verifyOtp(VerifyOtpDto verifyOtpDto) throws UserApplicationException;
-
 	String changePasswordWithOtp(ResetPasswordDto newPassword) throws UserApplicationException;
-
 }

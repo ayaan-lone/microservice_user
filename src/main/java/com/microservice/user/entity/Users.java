@@ -1,4 +1,4 @@
-package com.microservice.entity;
+package com.microservice.user.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
