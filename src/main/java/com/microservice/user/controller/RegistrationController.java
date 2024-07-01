@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservice.entity.Users;
+import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.request.UserRegistrationRequestDto;
 import com.microservice.user.service.RegistrationService;

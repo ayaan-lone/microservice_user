@@ -1,4 +1,4 @@
-package com.microservice.user.serviceImpl;
+package com.microservice.user.service.impl;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.microservice.entity.Users;
 import com.microservice.user.dao.RegisterUserRepository;
+import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.service.GenerateOtpService;
 
