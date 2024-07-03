@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.request.UserRegistrationRequestDto;
+import com.microservice.user.response.UserPaginationResponse;
 import com.microservice.user.service.RegistrationService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -36,11 +38,14 @@ public class RegistrationController {
 		Users response = registrationService.registerUser(userRegistrationRequestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
-
+	
 	@GetMapping("/all")
-	public ResponseEntity<List<Users>> getAllUsers() {
-		List<Users> users = registrationService.getAllUsers();
-		return ResponseEntity.status(HttpStatus.OK).body(users);
+	public ResponseEntity<UserPaginationResponse> getAllUsers(
+			@RequestParam(name="pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name="pageSize", defaultValue = "10") Integer pageSize){
+		UserPaginationResponse response = registrationService.getAllUsers(pageNumber, pageSize);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+		
 	}
 	
 
