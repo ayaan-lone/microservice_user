@@ -62,6 +62,19 @@ public class Users implements Serializable {
 
 	@Column
 	private LocalDateTime otpGenerationTime;
+	
+	@Column
+	
+	private Boolean deleted = false;
+	
+
+	public Boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	public String getEmail() {
 		return email;

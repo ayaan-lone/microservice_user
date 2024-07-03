@@ -9,35 +9,29 @@ import org.springframework.stereotype.Service;
 import com.microservice.user.dao.RegisterUserRepository;
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
-import com.microservice.user.request.UserLoginRequestDto;
-import com.microservice.user.service.LoginService;
-import com.microservice.user.service.LogoutService;
+import com.microservice.user.service.SoftDeleteService;
+
 
 @Service
-public class LogoutServiceImpl implements LogoutService {
+public class SoftDeleteServiceImpl implements SoftDeleteService {
 	private final RegisterUserRepository registerUserRepository;
 
 	@Autowired
-	public LogoutServiceImpl(RegisterUserRepository registerUserRepository) {
+	public SoftDeleteServiceImpl(RegisterUserRepository registerUserRepository) {
 		this.registerUserRepository = registerUserRepository;
 	}
 
 	@Override
-	public Users logoutUser(Long id) throws UserApplicationException {
+	public Users softDeleteUser(Long id) throws UserApplicationException {
 		Optional<Users> optionalUser = registerUserRepository.findById(id);
 		if (!optionalUser.isPresent()) {
 			throw new UserApplicationException(HttpStatus.BAD_REQUEST, "User not present");
 		}
 
 		Users user = optionalUser.get();
-		user.setLoggedIn(false);
+		user.setDeleted(true);
 		registerUserRepository.save(user);
 		return user;
-		
-		
 	}
-
-	
-
 
 }
