@@ -19,6 +19,8 @@ import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.request.UserUpdateDto;
 import com.microservice.user.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/")
 public class UserController {
@@ -59,4 +61,13 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	
+	@GetMapping("/soft-delete")
+	public ResponseEntity<String> logout(@Valid @RequestParam Long id)
+			throws UserApplicationException {
+
+		String response = userService.softDeleteUser(id);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
 }

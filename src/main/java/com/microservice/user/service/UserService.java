@@ -13,4 +13,5 @@ public interface UserService {
 	Users searchUser(String username, String phonenumber, String email) throws UserApplicationException; 
 	Users updateUser(Long id, UserUpdateDto userUpdateDto) throws UserApplicationException; 
 	String deleteUser(Long userId) throws UserApplicationException; 
+	String softDeleteUser(Long userId) throws UserApplicationException;
 }

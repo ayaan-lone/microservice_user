@@ -22,6 +22,14 @@ public class UserServiceImpl implements UserService {
 		this.userRepository = userRepository;
 	}
 
+	private Users isUserPersists(Long id) throws UserApplicationException{
+		Optional<Users> user = userRepository.findById(id);
+		if(!user.isPresent()) {
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, "User with user id "+ id +" not present in database");
+		}
+		return user.get();
+	}
+	
 	public Users getUserByUsername(String username) throws UserApplicationException {
 		Optional<Users> userOptional = userRepository.findByUsername(username);
 
@@ -99,6 +107,14 @@ public class UserServiceImpl implements UserService {
 
 		userRepository.deleteById(userId);
 		return "User deleted Successfully"; 
+	}
+	
+	@Override
+	public String softDeleteUser(Long id) throws UserApplicationException {
+		Users user = isUserPersists(id);
+		user.setDeleted(true);
+		userRepository.save(user);
+		return "User is deleted!";
 	}
 
 }
