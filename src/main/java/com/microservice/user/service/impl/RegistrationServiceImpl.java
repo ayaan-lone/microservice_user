@@ -42,6 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 
 
+
 	@Override
 	public UserPaginationResponse getAllUsers(Integer pageNumber, Integer pageSize) {
 		// TODO Auto-generated method stub

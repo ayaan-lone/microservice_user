@@ -38,6 +38,7 @@ public class RegistrationController {
 		Users response = registrationService.registerUser(userRegistrationRequestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
+
 	
 	@GetMapping("/all")
 	public ResponseEntity<UserPaginationResponse> getAllUsers(
@@ -47,6 +48,5 @@ public class RegistrationController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 		
 	}
-	
 
 }

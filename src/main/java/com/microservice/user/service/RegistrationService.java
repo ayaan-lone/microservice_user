@@ -1,6 +1,5 @@
 package com.microservice.user.service;
 
-import java.util.List;
 
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
