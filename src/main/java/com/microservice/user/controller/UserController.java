@@ -19,54 +19,44 @@ import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.request.UserUpdateDto;
 import com.microservice.user.service.UserService;
 
-
 @RestController
 @RequestMapping("/api/v1/")
 public class UserController {
-   
-	private final  UserService userService; 
-	
+
+	private final UserService userService;
+
 	@Autowired
 	public UserController(UserService userService) {
-		this.userService = userService; 
+		this.userService = userService;
 	}
-	
-	@GetMapping("/all")
-	public ResponseEntity<List<Users>> getAllUsers() {
-		List<Users> users = userService.getAllUsers();
-		return ResponseEntity.status(HttpStatus.OK).body(users);
-	}
-	
+
 	@GetMapping("user/{userId}")
-	public ResponseEntity<Users>getUserById(@PathVariable Long userId) throws UserApplicationException{	
+	public ResponseEntity<Users> getUserById(@PathVariable Long userId) throws UserApplicationException {
 		Users response = userService.getUserById(userId);
-		return  ResponseEntity.status(HttpStatus.OK).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 	@GetMapping("search")
-    public ResponseEntity<Users> searchUser(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String phoneNumber,
-            @RequestParam(required = false) String email) throws UserApplicationException {
-        
-        Users response = userService.searchUser(username, phoneNumber, email);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-	
-	
+	public ResponseEntity<Users> searchUser(@RequestParam(required = false) String username,
+			@RequestParam(required = false) String phoneNumber, @RequestParam(required = false) String email)
+			throws UserApplicationException {
+
+		Users response = userService.searchUser(username, phoneNumber, email);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
 	@PutMapping("user/{userId}")
-    public ResponseEntity<Users> updateUser(
-            @PathVariable Long userId,
-            @RequestBody UserUpdateDto userUpdateDto) throws UserApplicationException {
-        
-        Users updatedUser = userService.updateUser(userId, userUpdateDto);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
-    }
-	
+	public ResponseEntity<Users> updateUser(@PathVariable Long userId, @RequestBody UserUpdateDto userUpdateDto)
+			throws UserApplicationException {
+
+		Users updatedUser = userService.updateUser(userId, userUpdateDto);
+		return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+	}
+
 	@DeleteMapping("user/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long userId) throws UserApplicationException {
-        String response = userService.deleteUser(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-	
+	public ResponseEntity<String> deleteUser(@PathVariable Long userId) throws UserApplicationException {
+		String response = userService.deleteUser(userId);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
 }
