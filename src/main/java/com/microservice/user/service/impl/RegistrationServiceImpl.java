@@ -23,25 +23,30 @@ public class RegistrationServiceImpl implements RegistrationService {
 	private final RegisterUserRepository registerUserRepository;
 	private final ModelMapper modelMapper;
 
-	@Autowired	
+	@Autowired
 	public RegistrationServiceImpl(RegisterUserRepository registerUserRepository, ModelMapper modelMapper) {
-		super();
+
 		this.modelMapper = modelMapper;
 		this.registerUserRepository = registerUserRepository;
 	}
 
 	@Override
 	public Users registerUser(UserRegistrationRequestDto userRegistrationRequestDto) throws UserApplicationException {
+		
+		//Convert all the characters into lowercase 
+		//Trim the backspace
+		//Add Conflict 
+		//Add constants in utils
+		// For Create and Update : Return String
+		
 		Optional<Users> optionalUser = registerUserRepository.findByEmail(userRegistrationRequestDto.getEmail());
 		if (optionalUser.isPresent()) {
-			throw new UserApplicationException(HttpStatus.BAD_REQUEST, "User already present");
+			throw new UserApplicationException(HttpStatus.CONFLICT, "User already present");
 		}
 		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
 		registerUserRepository.save(user);
 		return user;
 	}
-
-
 
 	@Override
 	public UserPaginationResponse getAllUsers(Integer pageNumber, Integer pageSize) {

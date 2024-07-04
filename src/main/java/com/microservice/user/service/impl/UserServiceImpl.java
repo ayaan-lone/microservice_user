@@ -69,15 +69,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Users searchUser(String username, String phoneNumber, String email) throws UserApplicationException {
-		if (username != null) {
-			return getUserByUsername(username);
-		} else if (phoneNumber != null) {
-			return getUserByPhoneNumber(phoneNumber);
-		} else if (email != null) {
-			return getUserByEmail(email);
-		} else {
-			throw new UserApplicationException(HttpStatus.BAD_REQUEST, "No Searh Criteria Found");
-		}
+	    
+		return userRepository.searchUser(username, email, phoneNumber); 
 	}
 
 	@Override
