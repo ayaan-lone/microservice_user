@@ -38,10 +38,4 @@ public class RegistrationServiceImpl implements RegistrationService {
 		return user;
 	}
 
-	@Override
-	public List<Users> getAllUsers() {
-		return registerUserRepository.findAll();
-		
-	}
-
 }

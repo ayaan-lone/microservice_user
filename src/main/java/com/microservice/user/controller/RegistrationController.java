@@ -37,11 +37,4 @@ public class RegistrationController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
-	@GetMapping("/all")
-	public ResponseEntity<List<Users>> getAllUsers() {
-		List<Users> users = registrationService.getAllUsers();
-		return ResponseEntity.status(HttpStatus.OK).body(users);
-	}
-	
-
 }
