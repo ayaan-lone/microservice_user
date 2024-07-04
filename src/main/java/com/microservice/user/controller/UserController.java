@@ -1,7 +1,5 @@
 package com.microservice.user.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.request.UserUpdateDto;
+import com.microservice.user.response.UserPaginationResponse;
 import com.microservice.user.service.UserService;
 
 import jakarta.validation.Valid;
@@ -30,6 +29,14 @@ public class UserController {
 	@Autowired
 	public UserController(UserService userService) {
 		this.userService = userService;
+	}
+
+	@GetMapping
+	public ResponseEntity<UserPaginationResponse> getAllUsers(
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+		UserPaginationResponse response = userService.getAllUsers(pageNumber, pageSize);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("user/{userId}")
@@ -61,13 +68,11 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
-	
 	@GetMapping("/soft-delete")
-	public ResponseEntity<String> logout(@Valid @RequestParam Long id)
-			throws UserApplicationException {
+	public ResponseEntity<String> logout(@Valid @RequestParam Long id) throws UserApplicationException {
 
 		String response = userService.softDeleteUser(id);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
+
 }

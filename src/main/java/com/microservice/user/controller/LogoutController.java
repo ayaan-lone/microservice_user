@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
-import com.microservice.user.service.LoginService;
 import com.microservice.user.service.LogoutService;
 
 import jakarta.validation.Valid;
@@ -24,15 +23,12 @@ public class LogoutController {
 	public LogoutController(LogoutService logoutService) {
 		this.logoutService = logoutService;
 	}
-	
+
 	@GetMapping("/logout")
-	public ResponseEntity<Users> logout(@Valid @RequestParam Long id)
-			throws UserApplicationException {
+	public ResponseEntity<Users> logout(@Valid @RequestParam Long id) throws UserApplicationException {
 
 		Users response = logoutService.logoutUser(id);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-	
-	
 
 }

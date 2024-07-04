@@ -48,17 +48,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 		return user;
 	}
 
-	@Override
-	public UserPaginationResponse getAllUsers(Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
-		UserPaginationResponse response = new UserPaginationResponse();
-		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		Page<Users> userPage = registerUserRepository.findAll(pageable);
-		response.setPageNo(pageNumber);
-		response.setPageSize(pageSize);
-		response.setPageCount(userPage.getTotalElements());
-		response.setUserList(userPage.getContent());
-		return response;
-	}
+	
 
 }

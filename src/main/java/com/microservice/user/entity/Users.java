@@ -62,11 +62,10 @@ public class Users implements Serializable {
 
 	@Column
 	private LocalDateTime otpGenerationTime;
-	
+
 	@Column
-	
+
 	private Boolean deleted = false;
-	
 
 	public Boolean isDeleted() {
 		return deleted;
@@ -180,5 +179,4 @@ public class Users implements Serializable {
 		this.isLoggedIn = isLoggedIn;
 	}
 
-	
 }

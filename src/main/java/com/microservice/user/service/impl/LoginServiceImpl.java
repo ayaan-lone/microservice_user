@@ -15,7 +15,7 @@ import com.microservice.user.service.LoginService;
 
 @Service
 public class LoginServiceImpl implements LoginService {
-	
+
 	private static final int MAX_ATTEMPTS = 5;
 	private static final int BLOCK_DURATION_HOURS = 24;
 

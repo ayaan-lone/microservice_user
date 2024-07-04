@@ -1,5 +1,6 @@
 package com.microservice.user.service.impl;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.microservice.user.dao.RegisterUserRepository;
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
+import com.microservice.user.request.ChangePasswordDto;
 import com.microservice.user.request.ResetPasswordDto;
 import com.microservice.user.request.VerifyOtpDto;
 import com.microservice.user.service.ResetPasswordService;
@@ -22,6 +24,46 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 	@Autowired
 	public ResetPasswordServiceImpl(RegisterUserRepository registerUserRepository) {
 		this.registerUserRepository = registerUserRepository;
+	}
+
+	public static String generateOTP() {
+		SecureRandom random = new SecureRandom();
+		int otp = 100000 + random.nextInt(900000);
+		return String.valueOf(otp);
+	}
+	
+	
+	@Override
+	public String changePassword(ChangePasswordDto changePasswordDto) throws UserApplicationException {
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(changePasswordDto.getEmail());
+		if (!optionalUser.isPresent()) {
+			throw new UserApplicationException(HttpStatus.BAD_REQUEST, "User not found.");
+		}
+		Users user = optionalUser.get();
+		if (!changePasswordDto.getCurrentPassword().equals(user.getPassword())) {
+			throw new UserApplicationException(HttpStatus.UNAUTHORIZED, "Current password is incorrect.");
+
+		}
+		user.setPassword(changePasswordDto.getNewPassword());
+		registerUserRepository.save(user);
+		return "Password has been changed successfully.";
+	}
+
+	@Override
+	public String generateOtp(String email) throws UserApplicationException {
+		// TODO Auto-generated method stub
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(email);
+		if (!optionalUser.isPresent()) {
+			throw new UserApplicationException(HttpStatus.BAD_REQUEST, "User not found.");
+		}
+		Users user = optionalUser.get();
+		String otp = generateOTP();
+
+		user.setOtpValue(otp);
+		user.setOtpGenerationTime(LocalDateTime.now());
+		registerUserRepository.save(user);
+		return otp;
+
 	}
 
 	@Override

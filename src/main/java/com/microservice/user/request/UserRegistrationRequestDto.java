@@ -1,7 +1,6 @@
 package com.microservice.user.request;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class UserRegistrationRequestDto {
@@ -9,6 +8,7 @@ public class UserRegistrationRequestDto {
 	@NotEmpty
 	private String email;
 	private String username;
+
 	public String getUsername() {
 		return username;
 	}

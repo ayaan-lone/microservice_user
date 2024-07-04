@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import com.microservice.user.dao.RegisterUserRepository;
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
-import com.microservice.user.request.UserLoginRequestDto;
-import com.microservice.user.service.LoginService;
 import com.microservice.user.service.LogoutService;
 
 @Service
@@ -33,11 +31,6 @@ public class LogoutServiceImpl implements LogoutService {
 		user.setLoggedIn(false);
 		registerUserRepository.save(user);
 		return user;
-		
-		
 	}
-
-	
-
 
 }
