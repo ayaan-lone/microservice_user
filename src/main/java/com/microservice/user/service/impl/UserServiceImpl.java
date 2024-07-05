@@ -25,46 +25,11 @@ public class UserServiceImpl implements UserService {
 		this.userRepository = userRepository;
 	}
 
-	private Users isUserPersists(Long id) throws UserApplicationException {
-		Optional<Users> user = userRepository.findById(id);
-		if (!user.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND,
-					"User with user id " + id + " not present in database");
-		}
-		return user.get();
-	}
-
-	public Users getUserByUsername(String username) throws UserApplicationException {
-		Optional<Users> userOptional = userRepository.findByUsername(username);
-
-		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND,
-					ConstantUtil.USER_NOT_FOUND + "username " + username);
-		}
-
-		return userOptional.get();
-	}
-
-	public Users getUserByPhoneNumber(String phoneNumber) throws UserApplicationException {
-		Optional<Users> userOptional = userRepository.findByPhoneNumber(phoneNumber);
-		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND,
-					ConstantUtil.USER_NOT_FOUND + "phone Number " + phoneNumber);
-		}
-		return userOptional.get();
-	}
-
-	public Users getUserByEmail(String email) throws UserApplicationException {
-		Optional<Users> userOptional = userRepository.findByEmail(email);
-		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND + "email " + email);
-		}
-		return userOptional.get();
-	}
+	// Fetching all the users
 
 	@Override
 	public UserPaginationResponse getAllUsers(Integer pageNumber, Integer pageSize) {
-		// TODO Auto-generated method stub
+
 		UserPaginationResponse response = new UserPaginationResponse();
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		Page<Users> userPage = userRepository.findAll(pageable);
@@ -75,37 +40,56 @@ public class UserServiceImpl implements UserService {
 		return response;
 	}
 
+	// Search User by Id
+
 	@Override
 	public Users getUserById(Long id) throws UserApplicationException {
-		// TODO Auto-generated method stub
+
 		Optional<Users> userOptional = userRepository.findById(id);
 
+		// If user does not exist
 		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_AVAILABLE + id);
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
 		}
 
 		return userOptional.get();
 	}
 
-	@Override
-	public Users searchUser(String username, String phoneNumber, String email) throws UserApplicationException {
+	// Search user by username, phoneNumber, email and sending the response by
+	// pagination.
 
-		return userRepository.searchUser(username, email, phoneNumber);
+	@Override
+	public UserPaginationResponse searchUser(String username, String phoneNumber, String email, Integer pageNumber,
+			Integer pageSize) throws UserApplicationException {
+
+		UserPaginationResponse response = new UserPaginationResponse();
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<Users> userPage = userRepository.searchUser(username, email, phoneNumber, pageable);
+		response.setPageNo(pageNumber);
+		response.setPageSize(pageSize);
+		response.setPageCount(userPage.getTotalElements());
+		response.setUserList(userPage.getContent());
+		return response;
 	}
 
+//  Updating User Profile in DB
+
 	@Override
-	public Users updateUser(Long userId, UserUpdateDto userUpdateDto) throws UserApplicationException {
+	public String updateUser(Long userId, UserUpdateDto userUpdateDto) throws UserApplicationException {
 		Optional<Users> userOptional = userRepository.findById(userId);
 
+		// If user does not exist
 		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_AVAILABLE + userId);
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
 		}
 
+		// Updating user data
 		Users user = userOptional.get();
 		user.setFirstName(userUpdateDto.getFirstname());
 		user.setLastName(userUpdateDto.getLastname());
 		user.setPhoneNumber(userUpdateDto.getPhoneNumber());
-		return userRepository.save(user);
+		userRepository.save(user);
+		return "User has been updated successfully";
 	}
 
 	@Override
@@ -113,17 +97,27 @@ public class UserServiceImpl implements UserService {
 
 		Optional<Users> userOptional = userRepository.findById(userId);
 
+		// If user does not exist
 		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_AVAILABLE + userId);
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
 		}
 
+		// deleting user
 		userRepository.deleteById(userId);
 		return "User deleted Successfully";
 	}
 
 	@Override
-	public String softDeleteUser(Long id) throws UserApplicationException {
-		Users user = isUserPersists(id);
+	public String softDeleteUser(Long userId) throws UserApplicationException {
+
+		Optional<Users> userOptional = userRepository.findById(userId);
+
+		// If user does not exist in DB.
+		if (!userOptional.isPresent()) {
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
+		}
+
+		Users user = userOptional.get();
 		user.setDeleted(true);
 		userRepository.save(user);
 		return "User is deleted!";

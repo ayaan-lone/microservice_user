@@ -23,10 +23,10 @@ public class LogoutController {
 	public LogoutController(LogoutService logoutService) {
 		this.logoutService = logoutService;
 	}
-
+    
+	// To Logout a user
 	@GetMapping("/logout")
 	public ResponseEntity<Users> logout(@Valid @RequestParam Long id) throws UserApplicationException {
-
 		Users response = logoutService.logoutUser(id);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}

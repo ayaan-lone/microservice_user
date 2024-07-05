@@ -31,6 +31,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	//To fetch all the users
 	@GetMapping
 	public ResponseEntity<UserPaginationResponse> getAllUsers(
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
@@ -39,34 +40,45 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	//To search a user by user id
+	
 	@GetMapping("user/{userId}")
 	public ResponseEntity<Users> getUserById(@PathVariable Long userId) throws UserApplicationException {
 		Users response = userService.getUserById(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	// To search a user by username, email, phoneNumber
+	
 	@GetMapping("search")
-	public ResponseEntity<Users> searchUser(@RequestParam(required = false) String username,
-			@RequestParam(required = false) String phoneNumber, @RequestParam(required = false) String email)
-			throws UserApplicationException {
+	public ResponseEntity<UserPaginationResponse> searchUser(@RequestParam(required = false) String username,
+			@RequestParam(required = false) String phoneNumber, @RequestParam(required = false) String email,
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) throws UserApplicationException {
 
-		Users response = userService.searchUser(username, phoneNumber, email);
+		UserPaginationResponse response = userService.searchUser(username, phoneNumber, email, pageNumber, pageSize);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-
+	
+	// To update a user
+	
 	@PutMapping("user/{userId}")
-	public ResponseEntity<Users> updateUser(@PathVariable Long userId, @RequestBody UserUpdateDto userUpdateDto)
+	public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserUpdateDto userUpdateDto)
 			throws UserApplicationException {
 
-		Users updatedUser = userService.updateUser(userId, userUpdateDto);
-		return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+		String response = userService.updateUser(userId, userUpdateDto);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
+	
+	//To delete a user
 
 	@DeleteMapping("user/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable Long userId) throws UserApplicationException {
 		String response = userService.deleteUser(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
+	
+	// To soft delete a user
 
 	@GetMapping("/soft-delete")
 	public ResponseEntity<String> logout(@Valid @RequestParam Long id) throws UserApplicationException {

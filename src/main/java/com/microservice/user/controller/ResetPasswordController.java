@@ -28,26 +28,33 @@ public class ResetPasswordController {
 	public ResetPasswordController(ResetPasswordService resetPasswordService) {
 		this.resetPasswordService = resetPasswordService;
 	}
-
+    
+	//Change Password with correct credentials
+	
 	@PostMapping("/change-password")
 	public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto)
 			throws UserApplicationException {
 		return ResponseEntity.ok(resetPasswordService.changePassword(changePasswordDto));
 	}
 
-	@GetMapping("/reset-password")
+	//Generating an OTP to validate user
+	
+	@GetMapping("/generate-otp")
 	public ResponseEntity<String> resetPassword(@Valid @RequestParam String email) throws UserApplicationException {
-
 		String response = resetPasswordService.generateOtp(email);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
+	
+	// Verifying a user by OTP 
 
 	@PostMapping("/verify-otp")
-	public ResponseEntity<String> resetPassword(@Valid @RequestBody VerifyOtpDto verifyOtpDto)
+	public ResponseEntity<String> verifyOtp(@Valid @RequestBody VerifyOtpDto verifyOtpDto)
 			throws UserApplicationException {
 		return ResponseEntity.ok(resetPasswordService.verifyOtp(verifyOtpDto));
 	}
 
+	//Changing Password with OTP
+	
 	@PostMapping("/reset-password")
 	public ResponseEntity<String> updatePassword(@Valid @RequestBody ResetPasswordDto newPassword)
 			throws UserApplicationException {

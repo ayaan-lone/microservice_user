@@ -4,9 +4,6 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +11,8 @@ import com.microservice.user.dao.RegisterUserRepository;
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.request.UserRegistrationRequestDto;
-import com.microservice.user.response.UserPaginationResponse;
 import com.microservice.user.service.RegistrationService;
+import com.microservice.user.util.ConstantUtil;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
@@ -31,21 +28,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 
 	@Override
-	public Users registerUser(UserRegistrationRequestDto userRegistrationRequestDto) throws UserApplicationException {
-		
-		//Convert all the characters into lowercase 
-		//Trim the backspace
-		//Add Conflict 
-		//Add constants in utils
-		// For Create and Update : Return String
+	public String registerUser(UserRegistrationRequestDto userRegistrationRequestDto) throws UserApplicationException {
 		
 		Optional<Users> optionalUser = registerUserRepository.findByEmail(userRegistrationRequestDto.getEmail());
 		if (optionalUser.isPresent()) {
-			throw new UserApplicationException(HttpStatus.CONFLICT, "User already present");
+			throw new UserApplicationException(HttpStatus.CONFLICT, ConstantUtil.USER_ALREADY_PRESENT);
 		}
 		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
 		registerUserRepository.save(user);
-		return user;
+		return "User has been Created";
 	}
 
 	

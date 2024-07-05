@@ -8,12 +8,12 @@ import com.microservice.user.response.UserPaginationResponse;
 public interface UserService {
 
 	UserPaginationResponse getAllUsers(Integer pageNumber, Integer pageSize);
-
+	
 	Users getUserById(Long userId) throws UserApplicationException;
 
-	Users searchUser(String username, String phonenumber, String email) throws UserApplicationException;
+	UserPaginationResponse searchUser(String username, String phonenumber, String email, Integer pageNumber, Integer pageSize) throws UserApplicationException;
 
-	Users updateUser(Long id, UserUpdateDto userUpdateDto) throws UserApplicationException;
+	String updateUser(Long id, UserUpdateDto userUpdateDto) throws UserApplicationException;
 
 	String deleteUser(Long userId) throws UserApplicationException;
 
