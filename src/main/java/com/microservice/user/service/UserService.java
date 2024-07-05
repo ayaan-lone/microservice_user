@@ -1,17 +1,21 @@
 package com.microservice.user.service;
 
-import java.util.List;
-
 import com.microservice.user.entity.Users;
 import com.microservice.user.exception.UserApplicationException;
 import com.microservice.user.request.UserUpdateDto;
+import com.microservice.user.response.UserPaginationResponse;
 
 public interface UserService {
-   
-	List<Users> getAllUsers();
-	Users getUserById(Long userId) throws UserApplicationException; 
-	Users searchUser(String username, String phonenumber, String email) throws UserApplicationException; 
-	Users updateUser(Long id, UserUpdateDto userUpdateDto) throws UserApplicationException; 
-	String deleteUser(Long userId) throws UserApplicationException; 
+
+	UserPaginationResponse getAllUsers(Integer pageNumber, Integer pageSize);
+	
+	Users getUserById(Long userId) throws UserApplicationException;
+
+	UserPaginationResponse searchUser(String username, String phonenumber, String email, Integer pageNumber, Integer pageSize) throws UserApplicationException;
+
+	String updateUser(Long id, UserUpdateDto userUpdateDto) throws UserApplicationException;
+
+	String deleteUser(Long userId) throws UserApplicationException;
+
 	String softDeleteUser(Long userId) throws UserApplicationException;
 }

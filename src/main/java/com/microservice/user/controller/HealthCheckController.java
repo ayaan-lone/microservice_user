@@ -12,6 +12,6 @@ public class HealthCheckController {
 	
 	@GetMapping("health-check")
 	ResponseEntity<String> healthCheck(){
-		return ResponseEntity.status(HttpStatus.OK).body("User microservice is working, I am making first commit from aryan branch");
+		return ResponseEntity.status(HttpStatus.OK).body("User microservice is working, I am making first commit from my branch");
 	}
 }

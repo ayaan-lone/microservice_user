@@ -25,12 +25,12 @@ public class LoginController {
 	public LoginController(LoginService loginService) {
 		this.loginService = loginService;
 	}
-
+    
+	//To Login a User
 	@PostMapping("/login")
 	public ResponseEntity<Users> loginUser(@Valid @RequestBody UserLoginRequestDto userLoginDto)
 			throws UserApplicationException {
 		Users response = loginService.loginUser(userLoginDto);
-
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
 	}
