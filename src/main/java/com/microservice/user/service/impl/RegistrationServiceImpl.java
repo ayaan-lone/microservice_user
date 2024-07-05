@@ -30,10 +30,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 	@Override
 	public String registerUser(UserRegistrationRequestDto userRegistrationRequestDto) throws UserApplicationException {
 		
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(userRegistrationRequestDto.getEmail());
+		//Converting the email to lowercase and trimming the leading and trailing spaces
+		
+		String email = userRegistrationRequestDto.getEmail().toLowerCase().trim(); 
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(email);
 		if (optionalUser.isPresent()) {
 			throw new UserApplicationException(HttpStatus.CONFLICT, ConstantUtil.USER_ALREADY_PRESENT);
 		}
+		
+		userRegistrationRequestDto.setEmail(email);
 		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
 		registerUserRepository.save(user);
 		return "User has been Created";

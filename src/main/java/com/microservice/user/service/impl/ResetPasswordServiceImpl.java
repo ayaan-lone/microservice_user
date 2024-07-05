@@ -37,7 +37,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 	@Override
 	public String changePassword(ChangePasswordDto changePasswordDto) throws UserApplicationException {
 		
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(changePasswordDto.getEmail());
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(changePasswordDto.getEmail().toLowerCase().trim());
 		
 		//If user does not exist
 		if (!optionalUser.isPresent()) {
@@ -81,7 +81,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 	@Override
 	public String verifyOtp(VerifyOtpDto verifyOtpDto) throws UserApplicationException {
 		
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(verifyOtpDto.getEmail());
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(verifyOtpDto.getEmail().toLowerCase().trim());
 		
 		//If user does not exist in DB. 
 		if (!optionalUser.isPresent()) {
@@ -112,7 +112,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 	@Override
 	public String changePasswordWithOtp(ResetPasswordDto resetPasswordDto) throws UserApplicationException {
 		
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(resetPasswordDto.getEmail());
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(resetPasswordDto.getEmail().toLowerCase().trim());
 		
 		//If user does not exist in db
 		if (!optionalUser.isPresent()) {

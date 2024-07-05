@@ -30,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public Users loginUser(UserLoginRequestDto userLoginRequestDto) throws UserApplicationException {
          
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(userLoginRequestDto.getEmail());
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(userLoginRequestDto.getEmail().toLowerCase().trim());
 		
 		// If User does not exist
 		if (!optionalUser.isPresent()) {

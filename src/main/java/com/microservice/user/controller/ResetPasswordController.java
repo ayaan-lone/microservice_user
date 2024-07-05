@@ -40,8 +40,8 @@ public class ResetPasswordController {
 	//Generating an OTP to validate user
 	
 	@GetMapping("/generate-otp")
-	public ResponseEntity<String> resetPassword(@Valid @RequestParam String email) throws UserApplicationException {
-		String response = resetPasswordService.generateOtp(email);
+	public ResponseEntity<String> generateOtp(@Valid @RequestParam String email) throws UserApplicationException {
+		String response = resetPasswordService.generateOtp(email.toLowerCase().trim());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
