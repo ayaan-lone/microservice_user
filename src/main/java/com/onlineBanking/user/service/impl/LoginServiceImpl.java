@@ -3,6 +3,7 @@ package com.onlineBanking.user.service.impl;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.onlineBanking.user.dao.RegisterUserRepository;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.request.UserLoginRequestDto;
+import com.onlineBanking.user.response.LoginResponseDto;
 import com.onlineBanking.user.service.LoginService;
 import com.onlineBanking.user.util.ConstantUtil;
 
@@ -21,14 +23,16 @@ public class LoginServiceImpl implements LoginService {
 	private static final int BLOCK_DURATION_HOURS = 24; 
 
 	private final RegisterUserRepository registerUserRepository;
+	private final ModelMapper modelMapper;
 
 	@Autowired
-	public LoginServiceImpl(RegisterUserRepository registerUserRepository) {
+	public LoginServiceImpl(RegisterUserRepository registerUserRepository, ModelMapper modelMapper) {
 		this.registerUserRepository = registerUserRepository;
+		this.modelMapper=modelMapper;
 	}
 
 	@Override
-	public Users loginUser(UserLoginRequestDto userLoginRequestDto) throws UserApplicationException {
+	public LoginResponseDto loginUser(UserLoginRequestDto userLoginRequestDto) throws UserApplicationException {
          
 		Optional<Users> optionalUser = registerUserRepository.findByEmail(userLoginRequestDto.getEmail().toLowerCase().trim());
 		
@@ -64,7 +68,10 @@ public class LoginServiceImpl implements LoginService {
 		user.setNumberOfAttempts(0);
 		user.setLoggedIn(true);
 		registerUserRepository.save(user);
-		return user;
+		
+		  // Map Users to LoginResponseDto
+        LoginResponseDto loginResponseDto = modelMapper.map(user, LoginResponseDto.class);
+        return loginResponseDto;
 	}
 
 }
