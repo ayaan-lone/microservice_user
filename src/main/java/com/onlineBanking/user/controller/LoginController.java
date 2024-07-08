@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.request.UserLoginRequestDto;
+import com.onlineBanking.user.response.LoginResponseDto;
 import com.onlineBanking.user.service.LoginService;
 
 import jakarta.validation.Valid;
@@ -28,9 +29,9 @@ public class LoginController {
     
 	//To Login a User
 	@PostMapping("/login")
-	public ResponseEntity<Users> loginUser(@Valid @RequestBody UserLoginRequestDto userLoginDto)
+	public ResponseEntity<LoginResponseDto> loginUser(@Valid @RequestBody UserLoginRequestDto userLoginDto)
 			throws UserApplicationException {
-		Users response = loginService.loginUser(userLoginDto);
+		LoginResponseDto response = loginService.loginUser(userLoginDto);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
 	}
