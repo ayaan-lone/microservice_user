@@ -51,9 +51,20 @@ public class RegistrationServiceImplTest {
 	@Test
 	void testRegisterUser_Success() throws UserApplicationException {
 		UserRegistrationRequestDto userRegistrationRequestDto = new UserRegistrationRequestDto();
+		userRegistrationRequestDto.setUsername("User");
 		userRegistrationRequestDto.setEmail("test@example.com");
+		userRegistrationRequestDto.setFirstName("String");
+        userRegistrationRequestDto.setLastName("String");
+        userRegistrationRequestDto.setPassword("Password");
+        userRegistrationRequestDto.setPhoneNumber("123456789");
 
 		Users user = new Users();
+		user.setUsername(userRegistrationRequestDto.getUsername());
+		user.setEmail(userRegistrationRequestDto.getEmail());
+        user.setFirstName(userRegistrationRequestDto.getFirstName());
+        user.setLastName(userRegistrationRequestDto.getLastName());
+        user.setPassword(userRegistrationRequestDto.getPassword());
+        user.setPhoneNumber(userRegistrationRequestDto.getPhoneNumber());
 		Optional<Users> optionalUser = Optional.empty();
 
 		Mockito.when(registerUserRepository.findByEmail("test@example.com")).thenReturn(optionalUser);
