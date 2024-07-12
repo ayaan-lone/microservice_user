@@ -49,10 +49,10 @@ public class ResetPasswordServiceImplTest {
 	void testChangePassword_InvalidCredentials() {
 		ChangePasswordDto changePasswordDto = new ChangePasswordDto();
 		changePasswordDto.setEmail("test@example.com");
-		changePasswordDto.setCurrentPassword("wrongpassword");
+		changePasswordDto.setCurrentPassword("wrong");
 
 		Users user = new Users();
-		user.setPassword("correctpassword");
+		user.setPassword("correct");
 
 		Mockito.when(registerUserRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
 
