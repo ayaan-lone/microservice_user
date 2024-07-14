@@ -1,19 +1,24 @@
 package com.onlineBanking.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineBanking.user.service.AccountService;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/")
 public class AccountController {
 
 	@Autowired
 	private AccountService accountService;
 
-	@PostMapping("create/{userId}")
-	public void createAccount(@PathVariable long userId, @RequestParam String accountType) {
-		accountService.createAccount(userId, accountType);
+// API to create a new account which will in turn generate a new Card
+	@PostMapping("{userId}")
+	public void createAccount(@PathVariable long userId,  @RequestParam long accountId) {
+		accountService.createAccount(userId, accountId);
 	}
 }
