@@ -22,4 +22,6 @@ public class AccountController {
 	public void createAccount(@PathVariable long userId,  @RequestParam long accountId) throws UserApplicationException {
 		accountService.createAccount(userId, accountId);
 	}
+	
+	
 }

@@ -1,6 +1,5 @@
 package com.onlineBanking.user.service;
 
-import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.request.UserLoginRequestDto;
 import com.onlineBanking.user.response.LoginResponseDto;
