@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.service.AccountService;
 
 @RestController
@@ -18,7 +19,7 @@ public class AccountController {
 
 // API to create a new account which will in turn generate a new Card
 	@PostMapping("{userId}")
-	public void createAccount(@PathVariable long userId,  @RequestParam long accountId) {
+	public void createAccount(@PathVariable long userId,  @RequestParam long accountId) throws UserApplicationException {
 		accountService.createAccount(userId, accountId);
 	}
 }
