@@ -11,4 +11,14 @@ public class UserApplicationExceptionHandler {
 		return ResponseEntity.status(userApplicationException.getHttpStatus())
 				.body(userApplicationException.getMessage());
 	}
+
+	@ExceptionHandler(value = { UserBlockedException.class })
+	public ResponseEntity<Object> handleUserBlockedException(UserBlockedException userBlockedException) {
+		return ResponseEntity.status(userBlockedException.getHttpStatus()).body(userBlockedException.getMessage());
+	}
+	
+	@ExceptionHandler(value = { UserDeletedException.class })
+	public ResponseEntity<Object> handleUserDeletedException(UserDeletedException userDeletedException){
+		return ResponseEntity.status(userDeletedException.getHttpStatus()).body(userDeletedException.getMessage());
+	}
 }

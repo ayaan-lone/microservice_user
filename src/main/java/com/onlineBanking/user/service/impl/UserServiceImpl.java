@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.onlineBanking.user.dao.UserRepository;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
+import com.onlineBanking.user.exception.UserBlockedException;
+import com.onlineBanking.user.exception.UserDeletedException;
 import com.onlineBanking.user.request.UserUpdateDto;
 import com.onlineBanking.user.response.UserPaginationResponse;
 import com.onlineBanking.user.service.UserService;
@@ -23,6 +25,18 @@ public class UserServiceImpl implements UserService {
 
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
+	}
+
+	// Check whether user is present or not
+	private Users isUserPersists(Long userId) throws UserApplicationException {
+		Optional<Users> userOptional = userRepository.findById(userId);
+
+		// If user does not exist
+		if (!userOptional.isPresent()) {
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
+		}
+
+		return userOptional.get();
 	}
 
 	// Fetching all the users
@@ -44,15 +58,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Users getUserById(Long id) throws UserApplicationException {
-
-		Optional<Users> userOptional = userRepository.findById(id);
-
-		// If user does not exist
-		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
-		}
-
-		return userOptional.get();
+		return isUserPersists(id);
 	}
 
 	// Search user by username, phoneNumber, email and sending the response by
@@ -76,15 +82,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String updateUser(Long userId, UserUpdateDto userUpdateDto) throws UserApplicationException {
-		Optional<Users> userOptional = userRepository.findById(userId);
-
-		// If user does not exist
-		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
-		}
-
 		// Updating user data
-		Users user = userOptional.get();
+		Users user = isUserPersists(userId);
 		user.setFirstName(userUpdateDto.getFirstname());
 		user.setLastName(userUpdateDto.getLastname());
 		user.setPhoneNumber(userUpdateDto.getPhoneNumber());
@@ -94,14 +93,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String deleteUser(Long userId) throws UserApplicationException {
-
-		Optional<Users> userOptional = userRepository.findById(userId);
-
-		// If user does not exist
-		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
-		}
-
+		Users user = isUserPersists(userId);
 		// deleting user
 		userRepository.deleteById(userId);
 		return "User deleted Successfully";
@@ -109,18 +101,24 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String softDeleteUser(Long userId) throws UserApplicationException {
-
-		Optional<Users> userOptional = userRepository.findById(userId);
-
-		// If user does not exist in DB.
-		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
-		}
-
-		Users user = userOptional.get();
+		// Check whether user is present or not
+		Users user = isUserPersists(userId);
 		user.setDeleted(true);
 		userRepository.save(user);
 		return "User is deleted!";
+	}
+
+	@Override
+	public Boolean verifyUserAndStatus(Long userId)
+			throws UserApplicationException, UserBlockedException, UserDeletedException {
+		Users user = isUserPersists(userId);
+		if(user.isBlocked()) {
+			throw new UserBlockedException();
+		}
+		if(user.isDeleted()) {
+			throw new UserDeletedException();
+		}
+		return true;
 	}
 
 }
