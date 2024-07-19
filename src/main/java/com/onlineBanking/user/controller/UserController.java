@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
+import com.onlineBanking.user.exception.UserBlockedException;
+import com.onlineBanking.user.exception.UserDeletedException;
 import com.onlineBanking.user.request.UserUpdateDto;
 import com.onlineBanking.user.response.UserPaginationResponse;
 import com.onlineBanking.user.service.UserService;
@@ -55,12 +57,20 @@ public class UserController {
 			@RequestParam(required = false) String phoneNumber, @RequestParam(required = false) String email,
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
 			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) throws UserApplicationException {
-		
+
 		if (email != null) {
 			email = email.toLowerCase().trim();
 		}
 
 		UserPaginationResponse response = userService.searchUser(username, phoneNumber, email, pageNumber, pageSize);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	// Verify that user is not blocked and account is not deleted
+	@GetMapping("verify-user/{userId}")
+	public ResponseEntity<Boolean> verifyUserAndStatus(@RequestParam(required = true) Long userId)
+			throws UserApplicationException, UserBlockedException, UserDeletedException {
+		Boolean response = userService.verifyUserAndStatus(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
