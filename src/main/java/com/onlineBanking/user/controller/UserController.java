@@ -67,7 +67,7 @@ public class UserController {
 	}
 
 	// Verify that user is not blocked and account is not deleted
-	@GetMapping("verify-user/{userId}")
+	@GetMapping("verify-user")
 	public ResponseEntity<Boolean> verifyUserAndStatus(@RequestParam(required = true) Long userId)
 			throws UserApplicationException, UserBlockedException, UserDeletedException {
 		Boolean response = userService.verifyUserAndStatus(userId);
