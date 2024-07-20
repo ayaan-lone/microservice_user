@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
 		// If user does not exist
 		if (!userOptional.isPresent()) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND + userId);
 		}
 
 		return userOptional.get();
