@@ -1,8 +1,8 @@
 package com.onlineBanking.user.util;
 
 public class ConstantUtil {
-	public static final String USER_NOT_AVAILABLE = "User is not avaialble in db with id ";
-	public static final String USER_NOT_FOUND = "User not found in DB with ";
+	public static final String USER_NOT_AVAILABLE = "User is not avaialble in db with userid ";
+	public static final String USER_NOT_FOUND = "User not found in DB with userid ";
 	public static final String USER_ALREADY_PRESENT = "User already present in db";
 	public static final String ACCOUNT_BLOCKED = "Account is Blocked. Try again after 24 hours.";
 	public static final String INVALID_CREDENTIALS = "Invalid Username or Password";
