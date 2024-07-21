@@ -1,30 +1,42 @@
 package com.onlineBanking.user.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.onlineBanking.user.dao.UserRepository;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.exception.UserBlockedException;
 import com.onlineBanking.user.exception.UserDeletedException;
+import com.onlineBanking.user.request.DashboardDetailsRequestDto;
 import com.onlineBanking.user.request.UserUpdateDto;
+import com.onlineBanking.user.response.AccountResponseDto;
+import com.onlineBanking.user.response.CardResponseDto;
+import com.onlineBanking.user.response.DashboardDetailsResponseDto;
 import com.onlineBanking.user.response.UserPaginationResponse;
 import com.onlineBanking.user.service.UserService;
 import com.onlineBanking.user.util.ConstantUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
-
 	private final UserRepository userRepository;
+
+	private final RestTemplate restTemplate;
 
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
+		this.restTemplate = new RestTemplate();
 	}
 
 	// Check whether user is present or not
@@ -112,13 +124,58 @@ public class UserServiceImpl implements UserService {
 	public Boolean verifyUserAndStatus(Long userId)
 			throws UserApplicationException, UserBlockedException, UserDeletedException {
 		Users user = isUserPersists(userId);
-		if(user.isBlocked()) {
+		if (user.isBlocked()) {
 			throw new UserBlockedException();
 		}
-		if(user.isDeleted()) {
+		if (user.isDeleted()) {
 			throw new UserDeletedException();
 		}
 		return true;
+	}
+
+	@Override
+	public DashboardDetailsResponseDto getDashboardDetails(Long userId) throws UserApplicationException {
+		// Create request DTO with userId
+		DashboardDetailsRequestDto dashboardDetailsRequestDto = new DashboardDetailsRequestDto();
+		dashboardDetailsRequestDto.setUserId(userId);
+
+		// Prepare request for account details
+		HttpEntity<DashboardDetailsRequestDto> accountHttpEntity = new HttpEntity<>(dashboardDetailsRequestDto);
+
+		// Fetch account details
+		ResponseEntity<AccountResponseDto> accountResponseEntity = restTemplate.exchange(
+				ConstantUtil.ACCOUNT_DETAIL_API_URL + userId, HttpMethod.GET, accountHttpEntity,
+				new ParameterizedTypeReference<AccountResponseDto>() {
+				});
+
+		AccountResponseDto account = accountResponseEntity.getBody();
+		System.out.println(account);
+
+		if (account == null) {
+			throw new UserApplicationException(HttpStatus.NOT_FOUND,
+					"Account details not found for user ID: " + userId);
+		}
+		// Prepare request for card details
+		HttpEntity<DashboardDetailsRequestDto> cardHttpEntity = new HttpEntity<>(dashboardDetailsRequestDto);
+
+		// Fetch card details
+		ResponseEntity<List<CardResponseDto>> cardResponseEntity = restTemplate.exchange(
+				ConstantUtil.CARD_LIST_URL + userId, HttpMethod.GET, cardHttpEntity,
+				new ParameterizedTypeReference<List<CardResponseDto>>() {
+				});
+
+		List<CardResponseDto> cards = cardResponseEntity.getBody();
+
+		if (cards == null) {
+			throw new UserApplicationException(HttpStatus.NOT_FOUND, "No cards found for user ID: " + userId);
+		}
+
+		// Create and populate the DashboardResponseDto
+		DashboardDetailsResponseDto dashboardDetailsResponseDto = new DashboardDetailsResponseDto();
+		dashboardDetailsResponseDto.setAccount(account);
+		dashboardDetailsResponseDto.setCards(cards);
+
+		return dashboardDetailsResponseDto;
 	}
 
 }
