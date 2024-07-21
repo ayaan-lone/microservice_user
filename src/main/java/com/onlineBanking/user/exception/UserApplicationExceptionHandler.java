@@ -3,6 +3,7 @@ package com.onlineBanking.user.exception;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 
 @ControllerAdvice
 public class UserApplicationExceptionHandler {
@@ -21,4 +22,11 @@ public class UserApplicationExceptionHandler {
 	public ResponseEntity<Object> handleUserDeletedException(UserDeletedException userDeletedException){
 		return ResponseEntity.status(userDeletedException.getHttpStatus()).body(userDeletedException.getMessage());
 	}
+
+	@ExceptionHandler(value = { HttpClientErrorException.class })
+	ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException httpClientErrorException) {
+		return ResponseEntity.status(httpClientErrorException.getStatusCode())
+				.body(httpClientErrorException.getMessage());
+	}
+	
 }

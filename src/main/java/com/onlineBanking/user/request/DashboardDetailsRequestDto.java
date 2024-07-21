@@ -1,6 +1,6 @@
 package com.onlineBanking.user.request;
 
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 public class DashboardDetailsRequestDto {
 	@NotEmpty(message = "UserId cannot be empty")
