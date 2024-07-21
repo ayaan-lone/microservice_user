@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,9 @@ import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.exception.UserBlockedException;
 import com.onlineBanking.user.exception.UserDeletedException;
+import com.onlineBanking.user.request.DashboardDetailsRequestDto;
 import com.onlineBanking.user.request.UserUpdateDto;
+import com.onlineBanking.user.response.DashboardDetailsResponseDto;
 import com.onlineBanking.user.response.UserPaginationResponse;
 import com.onlineBanking.user.service.UserService;
 
@@ -98,6 +101,15 @@ public class UserController {
 	public ResponseEntity<String> logout(@Valid @RequestParam Long id) throws UserApplicationException {
 
 		String response = userService.softDeleteUser(id);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	// To Fetch Account Details and Card Details To Show at Dash-board
+	@PostMapping("/dashboard")
+	public ResponseEntity<DashboardDetailsResponseDto> getDashboardDetails(
+			@Valid @RequestBody DashboardDetailsRequestDto request) throws UserApplicationException {
+
+		DashboardDetailsResponseDto response = userService.getDashboardDetails(request.getUserId());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 

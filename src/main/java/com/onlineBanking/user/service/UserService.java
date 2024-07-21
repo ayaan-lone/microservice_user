@@ -5,6 +5,7 @@ import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.exception.UserBlockedException;
 import com.onlineBanking.user.exception.UserDeletedException;
 import com.onlineBanking.user.request.UserUpdateDto;
+import com.onlineBanking.user.response.DashboardDetailsResponseDto;
 import com.onlineBanking.user.response.UserPaginationResponse;
 
 public interface UserService {
@@ -21,6 +22,8 @@ public interface UserService {
 	String deleteUser(Long userId) throws UserApplicationException;
 
 	String softDeleteUser(Long userId) throws UserApplicationException;
+
+	DashboardDetailsResponseDto getDashboardDetails(Long userId) throws UserApplicationException;
 
 	Boolean verifyUserAndStatus(Long userId) throws UserApplicationException, UserBlockedException, UserDeletedException;
 }
