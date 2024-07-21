@@ -3,17 +3,15 @@ package com.onlineBanking.user.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.onlineBanking.user.client.AccountClientHandler;
+import com.onlineBanking.user.client.CardClientHandler;
 import com.onlineBanking.user.dao.UserRepository;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
@@ -34,9 +32,15 @@ public class UserServiceImpl implements UserService {
 
 	private final RestTemplate restTemplate;
 
-	public UserServiceImpl(UserRepository userRepository) {
+	private final CardClientHandler cardClientHandler;
+	private final AccountClientHandler accountClientHandler;
+
+	public UserServiceImpl(UserRepository userRepository, AccountClientHandler accountClientHandler,
+			CardClientHandler cardClientHandler) {
 		this.userRepository = userRepository;
 		this.restTemplate = new RestTemplate();
+		this.cardClientHandler = cardClientHandler;
+		this.accountClientHandler = accountClientHandler;
 	}
 
 	// Check whether user is present or not
@@ -103,13 +107,7 @@ public class UserServiceImpl implements UserService {
 		return "User has been updated successfully";
 	}
 
-	@Override
-	public String deleteUser(Long userId) throws UserApplicationException {
-		Users user = isUserPersists(userId);
-		// deleting user
-		userRepository.deleteById(userId);
-		return "User deleted Successfully";
-	}
+
 
 	@Override
 	public String softDeleteUser(Long userId) throws UserApplicationException {
@@ -135,40 +133,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public DashboardDetailsResponseDto getDashboardDetails(Long userId) throws UserApplicationException {
-		// Create request DTO with userId
 		DashboardDetailsRequestDto dashboardDetailsRequestDto = new DashboardDetailsRequestDto();
 		dashboardDetailsRequestDto.setUserId(userId);
 
-		// Prepare request for account details
-		HttpEntity<DashboardDetailsRequestDto> accountHttpEntity = new HttpEntity<>(dashboardDetailsRequestDto);
-
-		// Fetch account details
-		ResponseEntity<AccountResponseDto> accountResponseEntity = restTemplate.exchange(
-				ConstantUtil.ACCOUNT_DETAIL_API_URL + userId, HttpMethod.GET, accountHttpEntity,
-				new ParameterizedTypeReference<AccountResponseDto>() {
-				});
-
-		AccountResponseDto account = accountResponseEntity.getBody();
-		System.out.println(account);
-
-		if (account == null) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND,
-					"Account details not found for user ID: " + userId);
-		}
-		// Prepare request for card details
-		HttpEntity<DashboardDetailsRequestDto> cardHttpEntity = new HttpEntity<>(dashboardDetailsRequestDto);
-
-		// Fetch card details
-		ResponseEntity<List<CardResponseDto>> cardResponseEntity = restTemplate.exchange(
-				ConstantUtil.CARD_LIST_URL + userId, HttpMethod.GET, cardHttpEntity,
-				new ParameterizedTypeReference<List<CardResponseDto>>() {
-				});
-
-		List<CardResponseDto> cards = cardResponseEntity.getBody();
-
-		if (cards == null) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, "No cards found for user ID: " + userId);
-		}
+		// This method will return the dashboard details
+		AccountResponseDto account = accountClientHandler.getAccountDetails(dashboardDetailsRequestDto);
+		List<CardResponseDto> cards = cardClientHandler.getUserCards(dashboardDetailsRequestDto);
 
 		// Create and populate the DashboardResponseDto
 		DashboardDetailsResponseDto dashboardDetailsResponseDto = new DashboardDetailsResponseDto();
