@@ -12,8 +12,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import com.onlineBanking.user.client.AccountClientHandler;
+import com.onlineBanking.user.client.CardClientHandler;
 import com.onlineBanking.user.dao.UserRepository;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
@@ -32,11 +33,13 @@ import com.onlineBanking.user.util.ConstantUtil;
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
-	private final RestTemplate restTemplate;
+	private final AccountClientHandler accountClientHandler;
+	private final CardClientHandler cardClientHandler;
 
-	public UserServiceImpl(UserRepository userRepository) {
+	public UserServiceImpl(UserRepository userRepository, AccountClientHandler accountClientHandler, CardClientHandler cardClientHandler) {
 		this.userRepository = userRepository;
-		this.restTemplate = new RestTemplate();
+		this.accountClientHandler = accountClientHandler;
+		this.cardClientHandler = cardClientHandler;
 	}
 
 	// Check whether user is present or not
@@ -139,36 +142,20 @@ public class UserServiceImpl implements UserService {
 		DashboardDetailsRequestDto dashboardDetailsRequestDto = new DashboardDetailsRequestDto();
 		dashboardDetailsRequestDto.setUserId(userId);
 
-		// Prepare request for account details
-		HttpEntity<DashboardDetailsRequestDto> accountHttpEntity = new HttpEntity<>(dashboardDetailsRequestDto);
-
-		// Fetch account details
-		ResponseEntity<AccountResponseDto> accountResponseEntity = restTemplate.exchange(
-				ConstantUtil.ACCOUNT_DETAIL_API_URL + userId, HttpMethod.GET, accountHttpEntity,
-				new ParameterizedTypeReference<AccountResponseDto>() {
-				});
-
-		AccountResponseDto account = accountResponseEntity.getBody();
+		// This method will return the dashboard details
+		AccountResponseDto account = accountClientHandler.getAccountDetails(dashboardDetailsRequestDto);
 		System.out.println(account);
 
-		if (account == null) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND,
-					"Account details not found for user ID: " + userId);
-		}
-		// Prepare request for card details
-		HttpEntity<DashboardDetailsRequestDto> cardHttpEntity = new HttpEntity<>(dashboardDetailsRequestDto);
+//		if (account == null) {
+//			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND + userId);
+//		}
+		
 
-		// Fetch card details
-		ResponseEntity<List<CardResponseDto>> cardResponseEntity = restTemplate.exchange(
-				ConstantUtil.CARD_LIST_URL + userId, HttpMethod.GET, cardHttpEntity,
-				new ParameterizedTypeReference<List<CardResponseDto>>() {
-				});
+		List<CardResponseDto> cards = cardClientHandler.getUserCards(dashboardDetailsRequestDto);
 
-		List<CardResponseDto> cards = cardResponseEntity.getBody();
-
-		if (cards == null) {
-			throw new UserApplicationException(HttpStatus.NOT_FOUND, "No cards found for user ID: " + userId);
-		}
+//		if (cards == null) {
+//			throw new UserApplicationException(HttpStatus.NOT_FOUND, "No cards found for user ID: " + userId);
+//		}
 
 		// Create and populate the DashboardResponseDto
 		DashboardDetailsResponseDto dashboardDetailsResponseDto = new DashboardDetailsResponseDto();

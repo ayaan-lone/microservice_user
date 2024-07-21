@@ -11,7 +11,4 @@ public class ConstantUtil {
 	public static final String CREATE_ACCOUNT_API_URL = "http://localhost:8081/api/v1/create";
 	public static final String CARD_API_URL = "http://localhost:8082/api/v1/cards/deactivate";
 	public static final String NO_ACCOUNT_FOUND = "No Account Found for this User";
-	public static final String CARD_LIST_URL = "http://localhost:8082/api/v1/list?userId=";
-
-	public static final String ACCOUNT_DETAIL_API_URL = "http://localhost:8081/api/v1/account-detail?userId=";
 }
