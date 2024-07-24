@@ -123,7 +123,8 @@ public class UserServiceImpl implements UserService {
 			throws UserApplicationException, UserBlockedException, UserDeletedException {
 		Users user = isUserPersists(userId);
 		if (user.isBlocked()) {
-			throw new UserBlockedException();
+			throw new UserApplicationException(HttpStatus.FORBIDDEN, "The user is blocked");
+			//throw new UserBlockedException();
 		}
 		if (user.isDeleted()) {
 			throw new UserDeletedException();
