@@ -71,6 +71,7 @@ public class LoginServiceImpl implements LoginService {
 		
 		  // Map Users to LoginResponseDto
         LoginResponseDto loginResponseDto = modelMapper.map(user, LoginResponseDto.class);
+        loginResponseDto.setUserId(user.getId());
         return loginResponseDto;
 	}
 

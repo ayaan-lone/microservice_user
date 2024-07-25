@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.onlineBanking.user.client.AccountClientHandler;
 import com.onlineBanking.user.client.CardClientHandler;
@@ -30,7 +29,6 @@ import com.onlineBanking.user.util.ConstantUtil;
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
-	private final RestTemplate restTemplate;
 
 	private final CardClientHandler cardClientHandler;
 	private final AccountClientHandler accountClientHandler;
@@ -38,7 +36,6 @@ public class UserServiceImpl implements UserService {
 	public UserServiceImpl(UserRepository userRepository, AccountClientHandler accountClientHandler,
 			CardClientHandler cardClientHandler) {
 		this.userRepository = userRepository;
-		this.restTemplate = new RestTemplate();
 		this.cardClientHandler = cardClientHandler;
 		this.accountClientHandler = accountClientHandler;
 	}

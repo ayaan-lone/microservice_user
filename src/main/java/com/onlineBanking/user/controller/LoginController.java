@@ -3,6 +3,7 @@ package com.onlineBanking.user.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import com.onlineBanking.user.service.LoginService;
 import jakarta.validation.Valid;
 
 @RequestMapping("/api/v1/")
+@CrossOrigin(origins = "http://localhost:5500/") 
 @RestController
 public class LoginController {
 
@@ -27,7 +29,7 @@ public class LoginController {
 	}
     
 	//To Login a User
-	@PostMapping("/login")
+	@PostMapping("login")
 	public ResponseEntity<LoginResponseDto> loginUser(@Valid @RequestBody UserLoginRequestDto userLoginDto)
 			throws UserApplicationException {
 		LoginResponseDto response = loginService.loginUser(userLoginDto);
