@@ -5,6 +5,8 @@ public class LoginResponseDto {
 	private String username;
 	private String firstName;
 	private String lastName;
+	
+	private Long userId;
 
 	public String getEmail() {
 		return email;
@@ -36,6 +38,14 @@ public class LoginResponseDto {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 }
