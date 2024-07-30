@@ -7,16 +7,18 @@ public class LoginResponseDto {
 	private String username;
 	private String firstName;
 	private String lastName;
-	private UserRole userRole; 
-	private String  JwtToken; 
+	private Long userId;
+	private UserRole userRole;
+	private String JwtToken;
 
-	public LoginResponseDto(String email, String username, String firstName, String lastName, UserRole userRole,
-			String jwtToken) {
+	public LoginResponseDto(String email, String username, String firstName, String lastName, Long userId,
+			UserRole userRole, String jwtToken) {
 		super();
 		this.email = email;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.userId = userId;
 		this.userRole = userRole;
 		JwtToken = jwtToken;
 	}
@@ -32,7 +34,6 @@ public class LoginResponseDto {
 	public String getEmail() {
 		return email;
 	}
-
 
 	public String getJwtToken() {
 		return JwtToken;
@@ -68,6 +69,14 @@ public class LoginResponseDto {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 }

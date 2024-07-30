@@ -31,15 +31,14 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final CardClientHandler cardClientHandler;
 	private final AccountClientHandler accountClientHandler;
-	 
 
-    @Autowired
+	@Autowired
 	public UserServiceImpl(UserRepository userRepository, AccountClientHandler accountClientHandler,
 			CardClientHandler cardClientHandler) {
 		this.userRepository = userRepository;
 		this.cardClientHandler = cardClientHandler;
 		this.accountClientHandler = accountClientHandler;
-		 
+
 	}
 
 	// Check whether user is present or not
@@ -106,8 +105,6 @@ public class UserServiceImpl implements UserService {
 		return "User has been updated successfully";
 	}
 
-
-
 	@Override
 	public String softDeleteUser(Long userId) throws UserApplicationException {
 		// Check whether user is present or not
@@ -123,7 +120,7 @@ public class UserServiceImpl implements UserService {
 		Users user = isUserPersists(userId);
 		if (user.isBlocked()) {
 			throw new UserApplicationException(HttpStatus.FORBIDDEN, "The user is blocked");
-			//throw new UserBlockedException();
+			// throw new UserBlockedException();
 		}
 		if (user.isDeleted()) {
 			throw new UserDeletedException();

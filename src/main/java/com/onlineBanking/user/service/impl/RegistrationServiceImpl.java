@@ -12,6 +12,7 @@ import com.onlineBanking.user.entity.UserRole;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.request.UserRegistrationRequestDto;
+import com.onlineBanking.user.response.RegistrationResponseDto;
 import com.onlineBanking.user.service.RegistrationService;
 import com.onlineBanking.user.util.ConstantUtil;
 
@@ -29,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 
 	@Override
-	public String registerUser(UserRegistrationRequestDto userRegistrationRequestDto) throws UserApplicationException {
+	public RegistrationResponseDto registerUser(UserRegistrationRequestDto userRegistrationRequestDto) throws UserApplicationException {
 		
 		//Converting the email to lowercase and trimming the leading and trailing spaces
 		
@@ -43,7 +44,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
 		user.setRole(userRegistrationRequestDto.getRole());
 		registerUserRepository.save(user);
-		return "User has been Created";
+		RegistrationResponseDto registrationResponse = new RegistrationResponseDto();
+		registrationResponse.setUserId(user.getId());
+		return registrationResponse;
 	}
 
 	
