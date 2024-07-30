@@ -24,14 +24,12 @@ public class LoginServiceImpl implements LoginService {
 	private static final int BLOCK_DURATION_HOURS = 24;
 
 	private final RegisterUserRepository registerUserRepository;
-	private final ModelMapper modelMapper;
 	private final JwtService jwtService;
 
 	@Autowired
 	public LoginServiceImpl(RegisterUserRepository registerUserRepository, ModelMapper modelMapper,
 			JwtService jwtService) {
 		this.registerUserRepository = registerUserRepository;
-		this.modelMapper = modelMapper;
 		this.jwtService = jwtService;
 	}
 
