@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.onlineBanking.user.dao.RegisterUserRepository;
+import com.onlineBanking.user.entity.UserRole;
 import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.request.UserRegistrationRequestDto;
@@ -40,6 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 		
 		userRegistrationRequestDto.setEmail(email);
 		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
+		user.setRole(userRegistrationRequestDto.getRole());
 		registerUserRepository.save(user);
 		return "User has been Created";
 	}

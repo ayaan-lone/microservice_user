@@ -1,13 +1,45 @@
 package com.onlineBanking.user.response;
 
+import com.onlineBanking.user.entity.UserRole;
+
 public class LoginResponseDto {
 	private String email;
 	private String username;
 	private String firstName;
 	private String lastName;
+	private UserRole userRole; 
+	private String  JwtToken; 
+
+	public LoginResponseDto(String email, String username, String firstName, String lastName, UserRole userRole,
+			String jwtToken) {
+		super();
+		this.email = email;
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userRole = userRole;
+		JwtToken = jwtToken;
+	}
+
+	public UserRole getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
+	}
 
 	public String getEmail() {
 		return email;
+	}
+
+
+	public String getJwtToken() {
+		return JwtToken;
+	}
+
+	public void setJwtToken(String jwtToken) {
+		JwtToken = jwtToken;
 	}
 
 	public void setEmail(String email) {

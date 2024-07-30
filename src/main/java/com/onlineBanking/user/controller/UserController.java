@@ -3,6 +3,7 @@ package com.onlineBanking.user.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +35,9 @@ public class UserController {
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
-
+       
 	// To fetch all the users
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping
 	public ResponseEntity<UserPaginationResponse> getAllUsers(
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
@@ -44,8 +46,10 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	
+	
 	// To search a user by user id
-
+	
 	@GetMapping("user/{userId}")
 	public ResponseEntity<Users> getUserById(@PathVariable Long userId) throws UserApplicationException {
 		Users response = userService.getUserById(userId);
@@ -53,7 +57,6 @@ public class UserController {
 	}
 
 	// To search a user by username, email, phoneNumber
-
 	@GetMapping("search")
 	public ResponseEntity<UserPaginationResponse> searchUser(@RequestParam(required = false) String username,
 			@RequestParam(required = false) String phoneNumber, @RequestParam(required = false) String email,

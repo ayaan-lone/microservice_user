@@ -7,14 +7,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.onlineBanking.user.dao.UserRepository;
 import com.onlineBanking.user.entity.Users;
-import com.onlineBanking.user.response.CustomUserDetails;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -25,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public Users loadUserByUsername(String username) throws UsernameNotFoundException {
 
         logger.debug("Entering in loadUserByUsername Method...");
         Optional<Users> userOpt = userRepository.findByUsername(username);
@@ -37,6 +35,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Users user = userOpt.get(); 
         
         logger.info("User Authenticated Successfully..!!!");
-        return new CustomUserDetails(user);
+        return user; 
     }
 }

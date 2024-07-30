@@ -13,6 +13,7 @@ import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.request.UserLoginRequestDto;
 import com.onlineBanking.user.response.LoginResponseDto;
+import com.onlineBanking.user.security.JwtService;
 import com.onlineBanking.user.service.LoginService;
 import com.onlineBanking.user.util.ConstantUtil;
 
@@ -20,31 +21,35 @@ import com.onlineBanking.user.util.ConstantUtil;
 public class LoginServiceImpl implements LoginService {
 
 	private static final int MAX_ATTEMPTS = 5;
-	private static final int BLOCK_DURATION_HOURS = 24; 
+	private static final int BLOCK_DURATION_HOURS = 24;
 
 	private final RegisterUserRepository registerUserRepository;
 	private final ModelMapper modelMapper;
+	private final JwtService jwtService;
 
 	@Autowired
-	public LoginServiceImpl(RegisterUserRepository registerUserRepository, ModelMapper modelMapper) {
+	public LoginServiceImpl(RegisterUserRepository registerUserRepository, ModelMapper modelMapper,
+			JwtService jwtService) {
 		this.registerUserRepository = registerUserRepository;
-		this.modelMapper=modelMapper;
+		this.modelMapper = modelMapper;
+		this.jwtService = jwtService;
 	}
 
 	@Override
 	public LoginResponseDto loginUser(UserLoginRequestDto userLoginRequestDto) throws UserApplicationException {
-         
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(userLoginRequestDto.getEmail().toLowerCase().trim());
-		
+
+		Optional<Users> optionalUser = registerUserRepository
+				.findByEmail(userLoginRequestDto.getEmail().toLowerCase().trim());
+
 		// If User does not exist
 		if (!optionalUser.isPresent()) {
 			throw new UserApplicationException(HttpStatus.NOT_FOUND, ConstantUtil.USER_NOT_FOUND);
 		}
 
 		Users user = optionalUser.get();
-        
+
 		// If User is blocked
-		
+
 		if (user.isBlocked()) {
 			if (!user.getBlockedDate().plusHours(BLOCK_DURATION_HOURS).isBefore(LocalDateTime.now())) {
 				throw new UserApplicationException(HttpStatus.FORBIDDEN, ConstantUtil.ACCOUNT_BLOCKED);
@@ -68,10 +73,13 @@ public class LoginServiceImpl implements LoginService {
 		user.setNumberOfAttempts(0);
 		user.setLoggedIn(true);
 		registerUserRepository.save(user);
-		
-		  // Map Users to LoginResponseDto
-        LoginResponseDto loginResponseDto = modelMapper.map(user, LoginResponseDto.class);
-        return loginResponseDto;
+
+		String token = jwtService.GenerateToken(user);
+
+		LoginResponseDto loginResponseDto = new LoginResponseDto(user.getEmail(), user.getUsername(),
+				user.getFirstName(), user.getLastName(), user.getRole(), token);
+
+		return loginResponseDto;
 	}
 
 }

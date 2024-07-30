@@ -1,5 +1,4 @@
-package com.onlineBanking.user.configuration; 
-
+package com.onlineBanking.user.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,54 +19,51 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.onlineBanking.user.service.impl.UserDetailsServiceImpl;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    JwtAuthFilter jwtAuthFilter;
+	@Autowired
+	JwtAuthFilter jwtAuthFilter;
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return new UserDetailsServiceImpl();
-    }
+	@Bean
+	public UserDetailsService userDetailsService() {
+		return new UserDetailsServiceImpl();
+	}
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/v1/save", "/api/v1/login", "/api/v1/register", "/api/v1/refreshToken").permitAll()
-                .and()
-                .authorizeHttpRequests().requestMatchers("/api/v1/**")
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		return http.csrf().disable() // Ensure CSRF is disabled for stateless APIs
+				.cors().and() // Enable CORS support
+				.authorizeHttpRequests()
+				.requestMatchers("/api/v1/save", "/api/v1/login", "/api/v1/register", "/api/v1/refreshToken",
+						"/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**", "/health-check")
+				.permitAll() // Allow access without authentication
+				.anyRequest().authenticated() // All other requests require authentication
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.authenticationProvider(authenticationProvider()) // Custom authentication provider
+				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // JWT filter
+				.build();
+	}
 
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+		authenticationProvider.setUserDetailsService(userDetailsService());
+		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		return authenticationProvider;
 
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
+	}
 
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		return config.getAuthenticationManager();
+	}
 
 }

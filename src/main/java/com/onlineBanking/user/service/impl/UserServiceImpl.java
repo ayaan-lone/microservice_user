@@ -3,6 +3,7 @@ package com.onlineBanking.user.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import com.onlineBanking.user.response.AccountResponseDto;
 import com.onlineBanking.user.response.CardResponseDto;
 import com.onlineBanking.user.response.DashboardDetailsResponseDto;
 import com.onlineBanking.user.response.UserPaginationResponse;
+import com.onlineBanking.user.security.JwtService;
 import com.onlineBanking.user.service.UserService;
 import com.onlineBanking.user.util.ConstantUtil;
 
@@ -34,13 +36,16 @@ public class UserServiceImpl implements UserService {
 
 	private final CardClientHandler cardClientHandler;
 	private final AccountClientHandler accountClientHandler;
+	 
 
+    @Autowired
 	public UserServiceImpl(UserRepository userRepository, AccountClientHandler accountClientHandler,
 			CardClientHandler cardClientHandler) {
 		this.userRepository = userRepository;
 		this.restTemplate = new RestTemplate();
 		this.cardClientHandler = cardClientHandler;
 		this.accountClientHandler = accountClientHandler;
+		 
 	}
 
 	// Check whether user is present or not

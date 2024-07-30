@@ -1,5 +1,7 @@
 package com.onlineBanking.user.request;
 
+import com.onlineBanking.user.entity.UserRole;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
@@ -8,6 +10,7 @@ public class UserRegistrationRequestDto {
 	@NotEmpty
 	private String email;
 	private String username;
+	private UserRole role;
 
 	public String getUsername() {
 		return username;
@@ -15,6 +18,14 @@ public class UserRegistrationRequestDto {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public UserRole getRole() {
+		return role;
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
 	}
 
 	@NotEmpty(message = "Please enter a valid first name")
