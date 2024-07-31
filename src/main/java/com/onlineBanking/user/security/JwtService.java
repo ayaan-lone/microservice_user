@@ -51,14 +51,14 @@ public class JwtService {
 	public String GenerateToken(Users user) {
 	    Map<String, Object> claims = new HashMap<>();	
 	    claims.put("role", user.getRole()); 
-	    claims.put("username", user.getUsername()); 
-	    return createToken(claims, user.getId().toString());
+	    claims.put("userId", user.getId()); 
+	    return createToken(claims, user.getUsername());
 	}
 
-	private String createToken(Map<String, Object> claims, String userId) {
+	private String createToken(Map<String, Object> claims, String username) {
 
-		return Jwts.builder().setClaims(claims).setSubject(userId).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 10000 * 60 * 1))
+		return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 1))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 
