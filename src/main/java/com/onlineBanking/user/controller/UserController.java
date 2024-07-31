@@ -72,18 +72,19 @@ public class UserController {
 
 	// Verify that user is not blocked and account is not deleted
 	@GetMapping("verify-user")
-	public ResponseEntity<Boolean> verifyUserAndStatus(@RequestParam(required = true) Long userId)
+	public ResponseEntity<Boolean> verifyUserAndStatus(HttpServletRequest request)
 			throws UserApplicationException, UserBlockedException, UserDeletedException {
+		Long userId = (Long) request.getAttribute("userId");
 		Boolean response = userService.verifyUserAndStatus(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	// To update a user
 
-	@PutMapping("user/{userId}")
-	public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserUpdateDto userUpdateDto)
+	@PutMapping("/update-user")
+	public ResponseEntity<String> updateUser(HttpServletRequest request, @RequestBody UserUpdateDto userUpdateDto)
 			throws UserApplicationException {
-
+		Long userId = (Long) request.getAttribute("userId");
 		String response = userService.updateUser(userId, userUpdateDto);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
@@ -91,9 +92,9 @@ public class UserController {
 	// To soft delete a user
 
 	@GetMapping("/soft-delete")
-	public ResponseEntity<String> logout(@Valid @RequestParam Long id) throws UserApplicationException {
-
-		String response = userService.softDeleteUser(id);
+	public ResponseEntity<String> logout(HttpServletRequest request) throws UserApplicationException {
+	    Long userId = (Long) request.getAttribute("userId");
+		String response = userService.softDeleteUser(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
