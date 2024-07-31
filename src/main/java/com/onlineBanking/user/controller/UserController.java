@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,12 +17,12 @@ import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.exception.UserBlockedException;
 import com.onlineBanking.user.exception.UserDeletedException;
-import com.onlineBanking.user.request.DashboardDetailsRequestDto;
 import com.onlineBanking.user.request.UserUpdateDto;
 import com.onlineBanking.user.response.DashboardDetailsResponseDto;
 import com.onlineBanking.user.response.UserPaginationResponse;
 import com.onlineBanking.user.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -36,7 +36,7 @@ public class UserController {
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
-       
+
 	// To fetch all the users
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@GetMapping
@@ -47,10 +47,8 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
-	
-	
 	// To search a user by user id
-	
+
 	@GetMapping("user/{userId}")
 	public ResponseEntity<Users> getUserById(@PathVariable Long userId) throws UserApplicationException {
 		Users response = userService.getUserById(userId);
@@ -100,11 +98,10 @@ public class UserController {
 	}
 
 	// To Fetch Account Details and Card Details To Show at Dash-board
-	@PostMapping("/dashboard")
-	public ResponseEntity<DashboardDetailsResponseDto> getDashboardDetails(
-			@Valid @RequestBody DashboardDetailsRequestDto request) throws UserApplicationException {
-
-		DashboardDetailsResponseDto response = userService.getDashboardDetails(request.getUserId());
+	@GetMapping("/dashboard")
+	public ResponseEntity<DashboardDetailsResponseDto> getDashboardDetails(@RequestHeader("Authorization") String token, HttpServletRequest request) throws UserApplicationException {
+		Long userId = (Long) request.getAttribute("userId");
+		DashboardDetailsResponseDto response = userService.getDashboardDetails(userId, token);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 

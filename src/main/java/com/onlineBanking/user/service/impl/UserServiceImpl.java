@@ -17,7 +17,6 @@ import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.exception.UserBlockedException;
 import com.onlineBanking.user.exception.UserDeletedException;
-import com.onlineBanking.user.request.DashboardDetailsRequestDto;
 import com.onlineBanking.user.request.UserUpdateDto;
 import com.onlineBanking.user.response.AccountResponseDto;
 import com.onlineBanking.user.response.CardResponseDto;
@@ -129,13 +128,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public DashboardDetailsResponseDto getDashboardDetails(Long userId) throws UserApplicationException {
-		DashboardDetailsRequestDto dashboardDetailsRequestDto = new DashboardDetailsRequestDto();
-		dashboardDetailsRequestDto.setUserId(userId);
-
-		// This method will return the dashboard details
-		AccountResponseDto account = accountClientHandler.getAccountDetails(dashboardDetailsRequestDto);
-		List<CardResponseDto> cards = cardClientHandler.getUserCards(dashboardDetailsRequestDto);
+	public DashboardDetailsResponseDto getDashboardDetails(Long userId, String token) throws UserApplicationException {
+		
+		AccountResponseDto account = accountClientHandler.getAccountDetails(userId, token);
+		List<CardResponseDto> cards = cardClientHandler.getUserCards(userId, token);
 
 		// Create and populate the DashboardResponseDto
 		DashboardDetailsResponseDto dashboardDetailsResponseDto = new DashboardDetailsResponseDto();

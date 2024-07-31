@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.onlineBanking.user.request.DashboardDetailsRequestDto;
 import com.onlineBanking.user.response.CardResponseDto;
 
 @Component
@@ -25,13 +25,16 @@ public class CardClientHandler {
 		this.restTemplate = restTemplate;
 	}
 
-	public List<CardResponseDto> getUserCards(DashboardDetailsRequestDto dashboardDetailsRequestDto) {
+	public List<CardResponseDto> getUserCards( Long userId, String token) {
 		// Prepare request for card details
-		HttpEntity<DashboardDetailsRequestDto> cardHttpEntity = new HttpEntity<>(dashboardDetailsRequestDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);  // Add "Bearer " prefix if needed
+        HttpEntity<Void> cardHttpEntity = new HttpEntity<>(headers);
+
 
 		// Fetch card details
 		ResponseEntity<List<CardResponseDto>> cardResponseEntity = restTemplate.exchange(
-				cardListUrl + dashboardDetailsRequestDto.getUserId(), HttpMethod.GET, cardHttpEntity,
+				cardListUrl + userId, HttpMethod.GET, cardHttpEntity,
 				new ParameterizedTypeReference<List<CardResponseDto>>() {
 				});
 		
