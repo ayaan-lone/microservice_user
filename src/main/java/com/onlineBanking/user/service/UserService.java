@@ -22,7 +22,7 @@ public interface UserService {
 
 	String softDeleteUser(Long userId) throws UserApplicationException;
 
-	DashboardDetailsResponseDto getDashboardDetails(Long userId) throws UserApplicationException;
+	DashboardDetailsResponseDto getDashboardDetails(Long userId, String token) throws UserApplicationException;
 
 	Boolean verifyUserAndStatus(Long userId) throws UserApplicationException, UserBlockedException, UserDeletedException;
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.request.UserRegistrationRequestDto;
-import com.onlineBanking.user.response.RegistrationResponseDto;
 import com.onlineBanking.user.service.RegistrationService;
 
 import jakarta.validation.Valid;
@@ -25,14 +24,13 @@ public class RegistrationController {
 	public RegistrationController(RegistrationService registrationService) {
 		this.registrationService = registrationService;
 	}
-   
+
 	// Registering a user in db
-	
+
 	@PostMapping("register")
-	public ResponseEntity<RegistrationResponseDto> registerUser(
-			@Valid @RequestBody UserRegistrationRequestDto userRegistrationRequestDto)
-			throws UserApplicationException {
-		RegistrationResponseDto response = registrationService.registerUser(userRegistrationRequestDto);
+	public ResponseEntity<String> registerUser(
+			@Valid @RequestBody UserRegistrationRequestDto userRegistrationRequestDto) throws UserApplicationException {
+		String response = registrationService.registerUser(userRegistrationRequestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
