@@ -12,6 +12,7 @@ import com.onlineBanking.user.entity.Users;
 import com.onlineBanking.user.exception.UserApplicationException;
 import com.onlineBanking.user.service.LogoutService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RequestMapping("/api/v1/")
@@ -26,8 +27,9 @@ public class LogoutController {
     
 	// To Logout a user
 	@GetMapping("/logout")
-	public ResponseEntity<Users> logout(@Valid @RequestParam Long id) throws UserApplicationException {
-		Users response = logoutService.logoutUser(id);
+	public ResponseEntity<Users> logout(HttpServletRequest request) throws UserApplicationException {
+		Long userId = (Long) request.getAttribute("userId");
+		Users response = logoutService.logoutUser(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
