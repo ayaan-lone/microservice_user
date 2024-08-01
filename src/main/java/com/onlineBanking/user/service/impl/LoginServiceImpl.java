@@ -74,7 +74,8 @@ public class LoginServiceImpl implements LoginService {
 
 		String token = jwtService.GenerateToken(user);
 
-		LoginResponseDto loginResponseDto = new LoginResponseDto(token);
+		LoginResponseDto loginResponseDto = new LoginResponseDto(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail(),user.getPhoneNumber(),token);
+
 		return loginResponseDto;
 	}
 

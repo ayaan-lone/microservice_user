@@ -23,7 +23,6 @@ import com.onlineBanking.user.response.UserPaginationResponse;
 import com.onlineBanking.user.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/")
